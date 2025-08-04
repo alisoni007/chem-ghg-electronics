@@ -1,0 +1,37 @@
+[
+  {
+    "objectID": "Sources.html",
+    "href": "Sources.html",
+    "title": "Sources",
+    "section": "",
+    "text": "The data utilized in this project originates from the United States Environmental Protection Agency (EPA) Greenhouse Gas Reporting Program (GHGRP), specifically the “Emissions from Production & Transformation Processes by Chemical” records as published in 2023 EPA. This dataset comprises facility-reported, chemical-level emissions of fluorinated greenhouse gases within the electronics manufacturing sector, including key variables such as chemical name, facility identifier, reporting year, and total annual emissions measured in metric tons. To ensure analytical rigor, we performed thorough data cleaning, excluding any entries with missing chemical names or emission values and standardizing categorical fields for modeling purposes. All variable names were harmonized and formatted for clarity and consistency in downstream statistical analysis. The resulting clean dataset serves as the foundation for both exploratory analysis and predictive modeling, enabling a detailed investigation into the factors that drive greenhouse gas emissions at the chemical and facility level within the electronics industry."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Chemical-Level Modeling of Greenhouse Gas(GHG) Emissions in Electronics Manufacturing: An Empirical Analysis Using Facility-Reported EPA Data",
+    "section": "",
+    "text": "The environmental repercussions of electronics manufacturing have become increasingly critical in the era of rapid technological advancement. This project presents a detailed, data-driven assessment of greenhouse gas emissions at the chemical level within the electronics manufacturing sector. Utilizing facility-reported data from the United States Environmental Protection Agency (EPA), we systematically analyzed emissions of individual fluorinated greenhouse gases (GHGs) across a range of chemicals, facilities, and years. By focusing on reported emissions in metric tons, the study identified the top-emitting chemical species and highlighted significant temporal and facility-level trends within the industry. Exploratory data analysis revealed a small number of chemicals contribute disproportionately to total emissions, while annual trends suggest variability linked to production cycles and facility operations.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTotal Chemical Emissions by Year\n\n\n\n\n\n\n\n\n\nDistribution of Chemical Emissions\n\n\n\n\n\n\nRMSE: 17.36499 \n\n\n\n\n\nActual vs Predicted Emissions"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "My name is Hassan Ali, and I am a science teacher at a government school in Pakistan. I am deeply interested in data-driven science and enjoy exploring applications of statistics and data analysis to address real-world environmental issues. For any queries or collaboration, you can reach me at hassan.alisoni007@gmail.com, or visit my GitHub profile to see more of my work.\nThis project focuses on modeling chemical-level greenhouse gas emissions in electronics manufacturing, using advanced statistical techniques and data visualization. All analysis code and supporting materials are available in this repository. The project was developed to advance data science skills and contribute to environmental research efforts.\nThis project was created as part of Kane’s Data Science Bootcamp."
+  },
+  {
+    "objectID": "Model.html",
+    "href": "Model.html",
+    "title": "Model",
+    "section": "",
+    "text": "\\[\n\\log(1 + \\text{Emissions}_{\\mathrm{mt}}) = \\beta_0 + \\sum_{j} \\beta_j \\cdot \\text{Chemical}_j + \\sum_{k} \\gamma_k \\cdot \\text{Facility}_k + \\sum_{l} \\delta_l \\cdot \\text{Year}_l + \\epsilon\n\\]\n\n\nChemical Coefficients\n\n\nVariable..Chemical.Name.\nCoefficient\n\n\n\n\nTrifluoroethylene\n7.52\n\n\nPFC-14 (Perfluoromethane)\n2.84\n\n\nChlorodifluoromethane\n2.29\n\n\nHFC-152a\n2.27\n\n\nPerfluoro(methylcyclopropane)\n2.24\n\n\nHFC-1132a; VF2\n2.22\n\n\nHFC-32\n2.19\n\n\nHFC-134a\n2.07\n\n\n1H,10H-Perfluorodecane\n2.05\n\n\nPerfluorocyclobutane\n2.01\n\n\n\n\nThe fitted regression model identified Trifluoroethylene, PFC-14 (Perfluoromethane), and Chlorodifluoromethane as the most influential chemicals contributing to increased log-transformed emissions, with estimated coefficients of 7.52, 2.84, and 2.29, respectively. These values indicate a strong association between the presence of these chemicals and higher reported greenhouse gas emissions at the facility level."
+  },
+  {
+    "objectID": "Model.html#top-chemicals-in-the-model",
+    "href": "Model.html#top-chemicals-in-the-model",
+    "title": "Model",
+    "section": "",
+    "text": "\\[\n\\log(1 + \\text{Emissions}_{\\mathrm{mt}}) = \\beta_0 + \\sum_{j} \\beta_j \\cdot \\text{Chemical}_j + \\sum_{k} \\gamma_k \\cdot \\text{Facility}_k + \\sum_{l} \\delta_l \\cdot \\text{Year}_l + \\epsilon\n\\]\n\n\nChemical Coefficients\n\n\nVariable..Chemical.Name.\nCoefficient\n\n\n\n\nTrifluoroethylene\n7.52\n\n\nPFC-14 (Perfluoromethane)\n2.84\n\n\nChlorodifluoromethane\n2.29\n\n\nHFC-152a\n2.27\n\n\nPerfluoro(methylcyclopropane)\n2.24\n\n\nHFC-1132a; VF2\n2.22\n\n\nHFC-32\n2.19\n\n\nHFC-134a\n2.07\n\n\n1H,10H-Perfluorodecane\n2.05\n\n\nPerfluorocyclobutane\n2.01\n\n\n\n\nThe fitted regression model identified Trifluoroethylene, PFC-14 (Perfluoromethane), and Chlorodifluoromethane as the most influential chemicals contributing to increased log-transformed emissions, with estimated coefficients of 7.52, 2.84, and 2.29, respectively. These values indicate a strong association between the presence of these chemicals and higher reported greenhouse gas emissions at the facility level."
+  }
+]
