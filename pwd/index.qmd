@@ -1,0 +1,134 @@
+---
+title: "Chemical-Level Modeling of GHG Emissions in Electronics Manufacturing"
+format: html
+execute:
+  echo: false
+---
+
+
+The environmental repercussions of electronics manufacturing have become increasingly critical in the era of rapid technological advancement. This project presents a rigorous, chemical-level analysis of greenhouse gas emissions resulting from the production processes in the electronics industry. Utilizing authentic, facility-reported datasets sourced from the United States Environmental Protection Agency (EPA), the study investigates emissions of individual fluorinated greenhouse gases across multiple facilities and reporting years. Advanced statistical modeling techniques, including multiple linear regression, are employed to quantify and predict emissions based on chemical type, facility characteristics, and temporal factors. The analysis identifies key chemical contributors to overall greenhouse gas outputs and uncovers significant trends and patterns within the sector. Findings from this research not only advance the understanding of emissions at a granular level but also offer actionable insights for policymakers, industry stakeholders, and sustainability advocates aiming to mitigate the environmental footprint of electronics manufacturing.
+
+
+```{r}
+#| label: setup
+#| message: false
+library(readxl)
+library(dplyr)
+library(ggplot2)
+```
+
+
+```{r}
+raw_chem_data <- read_excel("l_o_freq_request_data.xlsx", sheet = "Emissions from P&T Proc by Chem")
+head(raw_chem_data, 5)
+colnames(raw_chem_data)
+
+```
+
+
+```{r}
+chem_data <- raw_chem_data %>%
+  filter(!is.na(`Fluorinated GHG Name`), !is.na(`Fluorinated GHG Emissions (metric tons)`)) %>%
+  rename(
+    year = `Reporting Year`,
+    facility_id = `Facility ID`,
+    facility_name = `Facility Name`,
+    chemical_name = `Fluorinated GHG Name`,
+    chemical_formula = `Chemical Formula`,
+    emissions_mt = `Fluorinated GHG Emissions (metric tons)`
+  )
+head(chem_data, 5)
+summary(chem_data$emissions_mt)
+
+```
+
+
+```{r}
+# Summary statistics
+summary(chem_data$emissions_mt)
+
+# Top 10 chemicals by total emissions (metric tons)
+top_chemicals <- chem_data %>%
+  group_by(chemical_name) %>%
+  summarize(total_mt = sum(emissions_mt, na.rm = TRUE)) %>%
+  arrange(desc(total_mt)) %>%
+  slice(1:10)
+
+top_chemicals
+
+# Bar plot: Top 10 chemicals by total emissions
+ggplot(top_chemicals, aes(x = reorder(chemical_name, total_mt), y = total_mt)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Top 10 Chemicals by Total Emissions (Metric Tons)",
+       x = "Chemical Name", y = "Total Emissions (Metric Tons)") +
+  theme_minimal()
+
+```
+
+
+```{r}
+yearly_trend <- chem_data %>%
+  group_by(year) %>%
+  summarize(total_emissions = sum(emissions_mt, na.rm = TRUE))
+
+ggplot(yearly_trend, aes(x = as.factor(year), y = total_emissions)) +
+  geom_col(fill = "darkgreen") +
+  labs(title = "Total Chemical Emissions by Year",
+       x = "Year", y = "Total Emissions (Metric Tons)") +
+  theme_minimal()
+
+```
+
+
+```{r}
+ggplot(chem_data, aes(x = emissions_mt)) +
+  geom_histogram(bins = 40, fill = "purple", color = "white") +
+  labs(title = "Distribution of Chemical Emissions (Metric Tons)",
+       x = "Emissions (Metric Tons)", y = "Count") +
+  theme_minimal()
+
+```
+
+
+```{r}
+# Ensure predictors are factors
+chem_data$chemical_name <- as.factor(chem_data$chemical_name)
+chem_data$facility_name <- as.factor(chem_data$facility_name)
+chem_data$year <- as.factor(chem_data$year)
+
+# Log-transform emissions (handle skewness)
+chem_data$log_emissions <- log1p(chem_data$emissions_mt)
+
+# Fit the model
+model <- lm(log_emissions ~ chemical_name + facility_name + year, data = chem_data)
+summary(model)
+
+```
+
+
+```{r}
+chem_data$predicted_log <- predict(model, newdata = chem_data)
+chem_data$predicted_mt <- expm1(chem_data$predicted_log)
+rmse <- sqrt(mean((chem_data$emissions_mt - chem_data$predicted_mt)^2, na.rm = TRUE))
+cat("RMSE:", rmse, "\n")
+
+ggplot(chem_data, aes(x = emissions_mt, y = predicted_mt)) +
+  geom_point(alpha = 0.5, color = "blue") +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  labs(title = "Actual vs Predicted Emissions (Metric Tons)",
+       x = "Actual Emissions (Metric Tons)",
+       y = "Predicted Emissions (Metric Tons)") +
+  theme_minimal()
+
+```
+
+
+```{r}
+# Coefficients table
+coef(summary(model))
+
+# Check most influential chemicals/facilities
+sort(abs(coef(model)), decreasing = TRUE)[1:10]
+
+```
