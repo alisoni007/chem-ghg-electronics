@@ -1,0 +1,13 @@
+/.quarto/
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+/.quarto/
+*Rproj
+/_site
+*cache
+models_files
+*.png
+*.rmarkdown

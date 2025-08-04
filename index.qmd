@@ -1,12 +1,12 @@
 ---
-title: "Chemical-Level Modeling of GHG Emissions in Electronics Manufacturing"
+title: "Chemical-Level Modeling of Greenhouse Gas(GHG) Emissions in Electronics Manufacturing: An Empirical Analysis Using Facility-Reported EPA Data"
 format: html
 execute:
   echo: false
 ---
 
 
-The environmental repercussions of electronics manufacturing have become increasingly critical in the era of rapid technological advancement. This project presents a rigorous, chemical-level analysis of greenhouse gas emissions resulting from the production processes in the electronics industry. Utilizing authentic, facility-reported datasets sourced from the United States Environmental Protection Agency (EPA), the study investigates emissions of individual fluorinated greenhouse gases across multiple facilities and reporting years. Advanced statistical modeling techniques, including multiple linear regression, are employed to quantify and predict emissions based on chemical type, facility characteristics, and temporal factors. The analysis identifies key chemical contributors to overall greenhouse gas outputs and uncovers significant trends and patterns within the sector. Findings from this research not only advance the understanding of emissions at a granular level but also offer actionable insights for policymakers, industry stakeholders, and sustainability advocates aiming to mitigate the environmental footprint of electronics manufacturing.
+The environmental repercussions of electronics manufacturing have become increasingly critical in the era of rapid technological advancement. This project presents a detailed, data-driven assessment of greenhouse gas emissions at the chemical level within the electronics manufacturing sector. Utilizing facility-reported data from the United States Environmental Protection Agency (EPA), we systematically analyzed emissions of individual fluorinated greenhouse gases (GHGs) across a range of chemicals, facilities, and years. By focusing on reported emissions in metric tons, the study identified the top-emitting chemical species and highlighted significant temporal and facility-level trends within the industry. Exploratory data analysis revealed a small number of chemicals contribute disproportionately to total emissions, while annual trends suggest variability linked to production cycles and facility operations. Applying multiple linear regression modeling, we demonstrated that chemical type, facility identity, and reporting year are all significant predictors of emission magnitude. The findings offer actionable insights for policymakers and industry leaders seeking targeted interventions, and advance our understanding of the environmental impact associated with electronics manufacturing at a granular, chemical-specific level.
 
 
 ```{r}
@@ -15,10 +15,12 @@ The environmental repercussions of electronics manufacturing have become increas
 library(readxl)
 library(dplyr)
 library(ggplot2)
+library(xml2)
 ```
 
 
 ```{r}
+#| include: false
 raw_chem_data <- read_excel("l_o_freq_request_data.xlsx", sheet = "Emissions from P&T Proc by Chem")
 head(raw_chem_data, 5)
 colnames(raw_chem_data)
@@ -27,6 +29,7 @@ colnames(raw_chem_data)
 
 
 ```{r}
+#| include: false
 chem_data <- raw_chem_data %>%
   filter(!is.na(`Fluorinated GHG Name`), !is.na(`Fluorinated GHG Emissions (metric tons)`)) %>%
   rename(
@@ -44,10 +47,13 @@ summary(chem_data$emissions_mt)
 
 
 ```{r}
-# Summary statistics
+#| include: false
 summary(chem_data$emissions_mt)
+```
 
-# Top 10 chemicals by total emissions (metric tons)
+```{r}
+#| include: false
+
 top_chemicals <- chem_data %>%
   group_by(chemical_name) %>%
   summarize(total_mt = sum(emissions_mt, na.rm = TRUE)) %>%
@@ -55,7 +61,9 @@ top_chemicals <- chem_data %>%
   slice(1:10)
 
 top_chemicals
+```
 
+```{r}
 # Bar plot: Top 10 chemicals by total emissions
 ggplot(top_chemicals, aes(x = reorder(chemical_name, total_mt), y = total_mt)) +
   geom_col(fill = "steelblue") +
@@ -68,6 +76,9 @@ ggplot(top_chemicals, aes(x = reorder(chemical_name, total_mt), y = total_mt)) +
 
 
 ```{r}
+#| label: yearly-trend
+#| echo: false
+#| fig-cap: "Total Chemical Emissions by Year"
 yearly_trend <- chem_data %>%
   group_by(year) %>%
   summarize(total_emissions = sum(emissions_mt, na.rm = TRUE))
@@ -82,6 +93,9 @@ ggplot(yearly_trend, aes(x = as.factor(year), y = total_emissions)) +
 
 
 ```{r}
+#| label: distribution
+#| echo: false
+#| fig-cap: "Distribution of Chemical Emissions"
 ggplot(chem_data, aes(x = emissions_mt)) +
   geom_histogram(bins = 40, fill = "purple", color = "white") +
   labs(title = "Distribution of Chemical Emissions (Metric Tons)",
@@ -92,6 +106,8 @@ ggplot(chem_data, aes(x = emissions_mt)) +
 
 
 ```{r}
+#| label: model-prep
+#| include: false
 # Ensure predictors are factors
 chem_data$chemical_name <- as.factor(chem_data$chemical_name)
 chem_data$facility_name <- as.factor(chem_data$facility_name)
@@ -100,6 +116,9 @@ chem_data$year <- as.factor(chem_data$year)
 # Log-transform emissions (handle skewness)
 chem_data$log_emissions <- log1p(chem_data$emissions_mt)
 
+#| label: model-fit
+#| echo: false
+#| output: true
 # Fit the model
 model <- lm(log_emissions ~ chemical_name + facility_name + year, data = chem_data)
 summary(model)
@@ -108,6 +127,9 @@ summary(model)
 
 
 ```{r}
+#| label: model-eval
+#| echo: false
+#| fig-cap: "Actual vs Predicted Emissions"
 chem_data$predicted_log <- predict(model, newdata = chem_data)
 chem_data$predicted_mt <- expm1(chem_data$predicted_log)
 rmse <- sqrt(mean((chem_data$emissions_mt - chem_data$predicted_mt)^2, na.rm = TRUE))
@@ -125,10 +147,13 @@ ggplot(chem_data, aes(x = emissions_mt, y = predicted_mt)) +
 
 
 ```{r}
+#| label: model-coefs
+#| echo: false
+#| output: true
 # Coefficients table
-coef(summary(model))
+#coef(summary(model))
 
 # Check most influential chemicals/facilities
-sort(abs(coef(model)), decreasing = TRUE)[1:10]
+#sort(abs(coef(model)), decreasing = TRUE)[1:10]
 
 ```

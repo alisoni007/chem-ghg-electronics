@@ -7,6 +7,10 @@ website:
     left:
       - href: index.qmd
         text: Home
+      - href: Model.qmd
+        text: Model
+      - href: Sources.qmd
+        text: Sources    
       - about.qmd
 
 format:

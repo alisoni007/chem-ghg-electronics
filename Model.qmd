@@ -1,0 +1,16 @@
+---
+title: "Model"
+format: html
+---
+
+## Top Chemicals in the Model
+
+$$
+\log(1 + \text{Emissions}_{\mathrm{mt}}) = \beta_0 + \sum_{j} \beta_j \cdot \text{Chemical}_j + \sum_{k} \gamma_k \cdot \text{Facility}_k + \sum_{l} \delta_l \cdot \text{Year}_l + \epsilon
+$$
+
+
+
+The fitted regression model identified \emph{Trifluoroethylene}, \emph{PFC-14 (Perfluoromethane)}, and \emph{Chlorodifluoromethane} as the most influential chemicals contributing to increased log-transformed emissions, with estimated coefficients of 7.52, 2.84, and 2.29, respectively. These values indicate a strong association between the presence of these chemicals and higher reported greenhouse gas emissions at the facility level.
+
+
