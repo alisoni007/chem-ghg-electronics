@@ -178,9 +178,11 @@ window.Quarto = {
 
 <section id="top-chemicals-in-the-model" class="level2">
 <h2 class="anchored" data-anchor-id="top-chemicals-in-the-model">Top Chemicals in the Model</h2>
+<p>This study’s linear regression model aims to quantify the relationship between chemical concentrations and greenhouse gas emissions. The regression equation contains a similar generalized form:</p>
 <p><span class="math display">\[
 \log(1 + \text{Emissions}_{\mathrm{mt}}) = \beta_0 + \sum_{j} \beta_j \cdot \text{Chemical}_j + \sum_{k} \gamma_k \cdot \text{Facility}_k + \sum_{l} \delta_l \cdot \text{Year}_l + \epsilon
 \]</span></p>
+<p>Where B_o is the constant term, which represents the baseline level of emissions when all chemicals’ concentrations are zero. In other words, B_o provides the starting point of emissions, independent of any chemical’s influence. The coefficients (B_1, B_2, etc.) represent the strength of the relationship between each chemical’s concentration and the log-transformed emissions.</p>
 <div class="cell" data-tbl-cap="Chemical Coefficients">
 <table class="caption-top table table-sm table-striped small">
 <caption>Chemical Coefficients</caption>
