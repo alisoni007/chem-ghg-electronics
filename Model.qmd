@@ -5,12 +5,37 @@ format: html
 
 ## Top Chemicals in the Model
 
+This study's linear regression model aims to quantify the relationship between chemical concentrations and greenhouse gas emissions.   The regression equation contains a similar generalized form:
+
 $$
 \log(1 + \text{Emissions}_{\mathrm{mt}}) = \beta_0 + \sum_{j} \beta_j \cdot \text{Chemical}_j + \sum_{k} \gamma_k \cdot \text{Facility}_k + \sum_{l} \delta_l \cdot \text{Year}_l + \epsilon
 $$
 
+Where B_o is the constant term, which represents the baseline level of emissions when all chemicals' concentrations are zero. In other words, B_o provides the starting point of emissions, independent of any chemical's influence. The coefficients (B_1, B_2, etc.) represent the strength of the relationship between each chemical's concentration and the log-transformed emissions. 
+
+```{r}
+#| label: chemical-table
+#| tbl-cap: "Chemical Coefficients"
+#| echo: false
+#| output: asis
+
+library(knitr)
+chemical_coeff <- data.frame(
+  `Variable (Chemical Name)` = c(
+    "Trifluoroethylene", "PFC-14 (Perfluoromethane)", 
+    "Chlorodifluoromethane", "HFC-152a",
+    "Perfluoro(methylcyclopropane)", "HFC-1132a; VF2",
+    "HFC-32", "HFC-134a",
+    "1H,10H-Perfluorodecane", "Perfluorocyclobutane"
+  ),
+  Coefficient = c(7.52, 2.84, 2.29, 2.27, 2.24, 2.22, 2.19, 2.07, 2.05, 2.01)
+)
+
+kable(chemical_coeff, align = c("l", "c"))
+```
 
 
-The fitted regression model identified \emph{Trifluoroethylene}, \emph{PFC-14 (Perfluoromethane)}, and \emph{Chlorodifluoromethane} as the most influential chemicals contributing to increased log-transformed emissions, with estimated coefficients of 7.52, 2.84, and 2.29, respectively. These values indicate a strong association between the presence of these chemicals and higher reported greenhouse gas emissions at the facility level.
+
+The fitted regression model identified *Trifluoroethylene*, *PFC-14 (Perfluoromethane)*, and *Chlorodifluoromethane* as the most influential chemicals contributing to increased log-transformed emissions, with estimated coefficients of 7.52, 2.84, and 2.29, respectively. These values indicate a strong association between the presence of these chemicals and higher reported greenhouse gas emissions at the facility level.
 
 
